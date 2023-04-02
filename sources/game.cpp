@@ -33,7 +33,7 @@ namespace ariel{
                 this->player1.AddWonCard(card1);
                 this->player1.setScore(1);
                 this->winnerPerRound = player1.getName();
-                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + " wins.\n";
+                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
                 this->logs += this->lastRound; 
                 
             }
@@ -42,7 +42,7 @@ namespace ariel{
                 this->player2.AddWonCard(card2);
                 this->player2.setScore(1);
                 this->winnerPerRound = this->player2.getName();
-                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + " wins.\n";
+                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
                 this->logs += this->lastRound;
             }
             else if(card1 > card2){
@@ -50,7 +50,7 @@ namespace ariel{
                 this->player1.AddWonCard(card1);
                 this->player1.setScore(1);
                 this->winnerPerRound = player1.getName();
-                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + " wins.\n";
+                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
                 this->logs += this->lastRound; 
 
             }
@@ -59,33 +59,107 @@ namespace ariel{
                 this->player2.AddWonCard(card2);
                 this->player2.setScore(1);
                 this->winnerPerRound = player2.getName();
-                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + " wins.\n";
+                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
                 this->logs += this->lastRound;
 
             }
-            else{
-              if(this->player1.stacksize() == 0 && this->player2.stacksize() == 0){
-                cout << "Draw Round" << endl;
-                draw++;
-              }
-              else if (this->player1.stacksize() == 1 && this->player2.stacksize() == 1){
-                card1 = this->player1.playCard();
-                card2 = this->player2.playCard();
-                if(card1 > card2){
-
+            else{ // draw
+                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". Draw.\n";
+                this->logs += this->lastRound;
+                vector<Card> jackpot;
+                jackpot.push_back(card1);
+                jackpot.push_back(card2);
+                bool done = false;
+                while(!done){
+                  Card card1Closed, card1Open, card2Closed, card2Open;
+                  if(this->player1.stacksize() < 2 || this->player2.stacksize() < 2){
+                    done = true;
+                    break;
+                  }
+                  card1Closed = this->player1.playCard();
+                  card1Open = this->player1.playCard();
+                  card2Closed = this->player2.playCard();
+                  card2Open = this->player2.playCard();
+                  if(card1Open > card2Open){
+                    jackpot.push_back(card1Open);
+                    jackpot.push_back(card2Open);
+                    jackpot.push_back(card1Closed);
+                    jackpot.push_back(card2Closed);
+                    for(Card card : jackpot){
+                      this->player1.AddWonCard(card);
+                    }
+                    done = true;
+                    this->winnerPerRound = player1.getName();
+                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
+                    this->logs += this->lastRound;
+                  }
+                  else if(card1Open < card2Open){
+                    jackpot.push_back(card2Open);
+                    jackpot.push_back(card1Open);
+                    jackpot.push_back(card2Closed);
+                    jackpot.push_back(card1Closed);
+                    for(Card card : jackpot){
+                      this->player2.AddWonCard(card);
+                      }
+                    done = true;
+                    this->winnerPerRound = player2.getName();
+                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " " + winnerPerRound + ". wins.\n";
+                    this->logs += this->lastRound;
+                  }
+                  else{
+                    jackpot.push_back(card1Closed);
+                    jackpot.push_back(card2Closed);
+                    jackpot.push_back(card1Open);
+                    jackpot.push_back(card2Open);
+                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". draw.\n";
+                    this->logs += this->lastRound;
+                  }
                 }
-                else if(card1 < card2){
 
-                }
-                else{
+              // vector<Card> drawCard;
+              // drawCard.push_back(card1);
+              // drawCard.push_back(card2);
+              // this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + " . Draw.\n";
+              // // no card left in the hand
+              // if(this->player1.stacksize() == 0 && this->player2.stacksize() == 0){
+              //   cout << "Draw Round" << endl;
+              //   draw++;
+              // }
+              // // one card left in the hand
+              // else if (this->player1.stacksize() == 1 && this->player2.stacksize() == 1){
+              //   card1 = this->player1.playCard();
+              //   card2 = this->player2.playCard();
+              //   if(card1 > card2){
+              //     this->player1.AddWonCard(card2);
+              //     this->player1.AddWonCard(card1);
+              //     while(!drawCard.empty()){
+              //       this->player1.AddWonCard(drawCard.back());
+              //       drawCard.pop_back();
+              //     }
+              //     this->player1.setScore(1);
+              //     this->winnerPerRound = player1.getName();
+              //   }
+              //   else if(card1 < card2){
+              //     this->player2.AddWonCard(card1);
+              //     this->player2.AddWonCard(card2);
+              //     while(!drawCard.empty()){
+              //       this->player2.AddWonCard(drawCard.back());
+              //       drawCard.pop_back();
+              //     }
+              //     this->player2.setScore(1);
+              //     this->winnerPerRound = player2.getName();
+              //   }
+                
+              //   else{
 
-                }
+              //   }
 
                 
-              }
-              else{
+              // }
+              // // more than one card left in the hand
+              // else{
 
-              }
+              // }
             }
         }
     }
