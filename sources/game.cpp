@@ -15,16 +15,8 @@ namespace ariel{
     }
 
     void Game::playTurn(){
-        // gameRound++;
-        // if(gameRound == 26){
-        //     return;
-        // }
         if(gameover){
-            if(player1.stacksize() != 0){
-                throw ("Game is over!!!");
-                return;
-            }
-            
+            throw ("Game is over!!!");
             return;
         }
         if(player1 == player2){ throw ("Same Player!!!");}
