@@ -27,7 +27,7 @@ namespace ariel{
         else{
             Card card1 = this->player1.playCard();
             Card card2 = this->player2.playCard();
-            if(card1.getValue() == 2 && card2.getValue() == 14){
+            if(card1.getValue() == 2 && card2.getValue() == 14){ // 2 wins against ace
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
                 this->player1.setScore(1);
@@ -36,7 +36,7 @@ namespace ariel{
                 this->logs = this->lastRound + this->logs; 
                 
             }
-            else if(card1.getValue() == 14 && card2.getValue() == 2){
+            else if(card1.getValue() == 14 && card2.getValue() == 2){ // 2 wins against ace
                 this->player2.AddWonCard(card1);
                 this->player2.AddWonCard(card2);
                 this->player2.setScore(1);
@@ -44,7 +44,7 @@ namespace ariel{
                 this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
                 this->logs = this->lastRound + this->logs; 
             }
-            else if(card1 > card2){
+            else if(card1 > card2){ 
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
                 this->player1.setScore(1);
@@ -72,7 +72,7 @@ namespace ariel{
                 bool done = false;
                 while(!done){
                   Card card1Closed, card1Open, card2Closed, card2Open;
-                  if(this->player1.stacksize() < 2 || this->player2.stacksize() < 2){
+                  if(this->player1.stacksize() < 2 || this->player2.stacksize() < 2){ // players have less than 2 cards
                     player1.AddWonCard(card1);
                     player2.AddWonCard(card2);
                     done = true;
@@ -110,7 +110,7 @@ namespace ariel{
                     this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
                     this->logs = this->lastRound + this->logs; 
                   }
-                  else{
+                  else{ // card1 = card2
                     draw++;
                     jackpot.push_back(card1Closed);
                     jackpot.push_back(card2Closed);
@@ -123,10 +123,6 @@ namespace ariel{
 
             }
         }
-    }
-
-    bool Game::checkCards(){
-        return false;
     }
 
     void Game::printLastTurn(){

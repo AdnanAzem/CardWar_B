@@ -29,9 +29,7 @@ namespace ariel{
         vector<Card> createDeck();     // Define a function to create a deck of cards
         void shuffleDeck(vector<Card>& deck); // Define a function to shuffle the deck of cards
         void divideDeck(vector<Card>& deck/*, Player &player1, Player &player2*/);  // Define a function to divide the deck of cards between two players
-        bool checkCards();
 
-        // friend bool operator== (Player & lhs, Player & rhs ) {return lhs.getName() == rhs.getName();};
 
     };
 }
