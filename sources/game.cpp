@@ -7,11 +7,28 @@
 namespace ariel{
        
     Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2), draw(0){
-        
         this->deck = createDeck();
         shuffleDeck(this->deck);
         divideDeck(this->deck/*, this->player1, this->player2*/);
         gameover = false;
+    }
+
+    void Game::fillInfo(int playerNum, Card &playedCard1, Card &playedCard2, int points){
+        if(playerNum == 1){ // fill info for player 1
+            this->player1.setScore(points);
+            this->winnerPerRound = player1.getName();
+            this->lastRound = this->player1.getName() + " played " + playedCard1.to_string() + " " +this->player2.getName() + " played " + playedCard2.to_string() + ". " + winnerPerRound + " wins.\n";
+            // this->logs = this->lastRound + this->logs; 
+            this->logs += this->lastRound;
+
+        }else { // fill info for player 2
+            this->player2.setScore(points);
+            this->winnerPerRound = player2.getName();
+            this->lastRound = this->player1.getName() + " played " + playedCard1.to_string() + " " + this->player2.getName() + " played " + playedCard2.to_string() + ". " + winnerPerRound + " wins.\n";
+            // this->logs = this->lastRound + this->logs;
+            this->logs += this->lastRound;
+
+        }
     }
 
     void Game::playTurn(){
@@ -30,41 +47,32 @@ namespace ariel{
             if(card1.getValue() == 2 && card2.getValue() == 14){ // 2 wins against ace
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
-                this->player1.setScore(1);
-                this->winnerPerRound = player1.getName();
-                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                this->logs = this->lastRound + this->logs; 
+                fillInfo(1,card1,card2,1);
                 
             }
             else if(card1.getValue() == 14 && card2.getValue() == 2){ // 2 wins against ace
                 this->player2.AddWonCard(card1);
                 this->player2.AddWonCard(card2);
-                this->player2.setScore(1);
-                this->winnerPerRound = this->player2.getName();
-                this->lastRound = this->player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                this->logs = this->lastRound + this->logs; 
+                fillInfo(2,card1,card2,1);
+
             }
             else if(card1 > card2){ 
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
-                this->player1.setScore(1);
-                this->winnerPerRound = player1.getName();
-                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                this->logs = this->lastRound + this->logs; 
+                fillInfo(1,card1,card2,1);
 
             }
             else if(card1 < card2){
                 this->player2.AddWonCard(card1);
                 this->player2.AddWonCard(card2);
-                this->player2.setScore(1);
-                this->winnerPerRound = player2.getName();
-                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                this->logs = this->lastRound + this->logs; 
+                fillInfo(2,card1,card2,1);
 
             }
             else{ // draw
+                this->player1.setDrawAmount(1);
+                this->player2.setDrawAmount(1);
                 draw++;
-                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". Draw.\n";
+                this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". Draw. ";
                 this->logs += this->lastRound;
                 vector<Card> jackpot;
                 jackpot.push_back(card1);
@@ -73,10 +81,23 @@ namespace ariel{
                 while(!done){
                   Card card1Closed, card1Open, card2Closed, card2Open;
                   if(this->player1.stacksize() < 2 || this->player2.stacksize() < 2){ // players have less than 2 cards
-                    player1.AddWonCard(card1);
-                    player2.AddWonCard(card2);
-                    done = true;
-                    break;
+                    if(this->player1.stacksize() == 0 || this->player2.stacksize() == 0){
+                        player1.AddWonCard(card1);
+                        player2.AddWonCard(card2);
+                        done = true;
+                        break;
+                    }
+                    else{
+                        player1.AddWonCard(card1);
+                        card1 = this->player1.playCard();
+                        player1.AddWonCard(card1);
+                        player2.AddWonCard(card2);
+                        card2 = this->player2.playCard();
+                        player2.AddWonCard(card2);
+                        done = true;
+                        break;
+                    }
+
                   }
                   card1Closed = this->player1.playCard();
                   card1Open = this->player1.playCard();
@@ -91,10 +112,7 @@ namespace ariel{
                       this->player1.AddWonCard(card);
                     }
                     done = true;
-                    this->winnerPerRound = player1.getName();
-                    this->player1.setScore(3);
-                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                    this->logs = this->lastRound + this->logs; 
+                    fillInfo(1,card1Open,card2Open,3);
                   }
                   else if(card1Open < card2Open){
                     jackpot.push_back(card2Open);
@@ -105,22 +123,21 @@ namespace ariel{
                       this->player2.AddWonCard(card);
                       }
                     done = true;
-                    this->winnerPerRound = player2.getName();
-                    this->player2.setScore(3);
-                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". " + winnerPerRound + " wins.\n";
-                    this->logs = this->lastRound + this->logs; 
+                    fillInfo(2,card1Open,card2Open,3);
                   }
                   else{ // card1 = card2
                     draw++;
+                    this->player1.setDrawAmount(1);
+                    this->player2.setDrawAmount(1);
                     jackpot.push_back(card1Closed);
                     jackpot.push_back(card2Closed);
                     jackpot.push_back(card1Open);
                     jackpot.push_back(card2Open);
-                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". draw.\n";
-                    this->logs = this->lastRound + this->logs; 
+                    this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". draw. ";
+                    // this->logs = this->lastRound + this->logs; 
+                    this->logs += this->lastRound;
                   }
                 }
-
             }
         }
     }
@@ -166,7 +183,8 @@ namespace ariel{
         
         stats = this->player1.getName() + "{\n"
                 + "\tscore : " + to_string(player1.getScore()) + "\n"
-                + "\tdraw : " + to_string(this->draw) + "\n"
+                + "\tamount of draws : " + to_string(this->draw) + "\n"
+                + "\tdraw rate : " + to_string((double)this->draw/(26-this->player1.stacksize())*100.0) + "%\n" 
                 + "\twinRates : " + to_string(player1.winRate(26-this->player1.stacksize())) + "%\n"
                 + "\tWonCards : " + to_string(this->player1.getWonCards().size()) + "\n"
                 + "\tCards [ \n" 
@@ -175,7 +193,8 @@ namespace ariel{
                 + "}\n\n"
                 + this->player2.getName() + "{\n"
                 + "\tscore : " + to_string(player2.getScore()) + "\n"
-                + "\tdraw : " + to_string(this->draw) + "\n"
+                + "\tamount of draws : " + to_string(this->draw) + "\n"
+                + "\tdraw rate : " + to_string((double)this->draw/(26-this->player2.stacksize())*100.0) + "%\n"
                 + "\twinRates : " + to_string(player2.winRate(26-this->player2.stacksize())) + "%\n"
                 + "\tWonCards : " + to_string(this->player2.getWonCards().size()) + "\n"
                 + "\tCards [ \n" 

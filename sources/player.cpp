@@ -60,8 +60,17 @@ namespace ariel{
     void Player::setHand(vector<Card> cards){
         this->hand = cards;
     }
+    
     void Player::setWonCards(vector<Card> cards){
         this->wonCards = cards;
+    }
+
+        void Player::setDrawAmount(int amount){
+        this->drawAmount += amount;
+    }
+
+    int Player::getDrawAmount(){
+        return this->drawAmount;
     }
 
 

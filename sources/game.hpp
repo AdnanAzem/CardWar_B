@@ -30,6 +30,7 @@ namespace ariel{
         void shuffleDeck(vector<Card>& deck); // Define a function to shuffle the deck of cards
         void divideDeck(vector<Card>& deck/*, Player &player1, Player &player2*/);  // Define a function to divide the deck of cards between two players
 
+        void fillInfo(int playerNum, Card &playedCard1, Card &playedCard2, int points); // 
 
     };
 }

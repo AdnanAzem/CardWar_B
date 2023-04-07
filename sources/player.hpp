@@ -11,6 +11,7 @@ namespace ariel{
         vector<Card> hand;
         vector<Card> wonCards;
         int score;
+        int drawAmount;
 
         public:
         Player();
@@ -21,11 +22,13 @@ namespace ariel{
         int getScore();
         vector<Card> getHand();
         vector<Card> getWonCards();
+        int getDrawAmount();
 
         //Setters
         void setScore(int point);
         void setHand(vector<Card> cards);
         void setWonCards(vector<Card> cards);
+        void setDrawAmount(int amount);
 
         
 
