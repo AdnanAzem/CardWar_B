@@ -7,11 +7,11 @@ namespace ariel{
 
     class Player{
         private:
-        string name;
-        vector<Card> hand;
-        vector<Card> wonCards;
-        int score;
-        int drawAmount;
+        string name; // name of the player
+        vector<Card> hand; // the cards that the player have 
+        vector<Card> wonCards; // the cards that the player won
+        int score; // add points (1 if win, 3 if draw then win) like the amount that player win without his cards
+        int wins; // counts the wins for player
 
         public:
         Player();
@@ -22,13 +22,13 @@ namespace ariel{
         int getScore();
         vector<Card> getHand();
         vector<Card> getWonCards();
-        int getDrawAmount();
+        int getWins();
 
         //Setters
         void setScore(int point);
         void setHand(vector<Card> cards);
         void setWonCards(vector<Card> cards);
-        void setDrawAmount(int amount);
+        void setWins(int amount);
 
         
 
@@ -37,9 +37,9 @@ namespace ariel{
 
         void addCardToHand(Card &card); // add card to hand
         Card playCard(); // play card from hand
-        void AddWonCard(Card &card);
+        void AddWonCard(Card &card); // add won cards to (wonCards)
         double winRate(int round);
 
-        bool operator==(const Player& other) const { return name == other.name; }
+        bool operator==(const Player& other) const { return name == other.name; } // Comparison operator overloads
     };
 }

@@ -3,11 +3,11 @@
 
 namespace ariel{
 
-    Player::Player() : name("Adnan"){
+    Player::Player() : name("Adnan"), wins(0){
 
     }
 
-    Player::Player(const char* name) : name(name), score(0){
+    Player::Player(const char* name) : name(name), score(0), wins(0){
 
     }
 
@@ -54,23 +54,23 @@ namespace ariel{
     }
 
     double Player::winRate(int round){
-        return (double)this->score/round*100.0;
+        return (double)this->wins/round*100.0;
     }
 
     void Player::setHand(vector<Card> cards){
         this->hand = cards;
     }
-    
+
     void Player::setWonCards(vector<Card> cards){
         this->wonCards = cards;
     }
 
-        void Player::setDrawAmount(int amount){
-        this->drawAmount += amount;
+        void Player::setWins(int amount){
+        this->wins += amount;
     }
 
-    int Player::getDrawAmount(){
-        return this->drawAmount;
+    int Player::getWins(){
+        return this->wins;
     }
 
 

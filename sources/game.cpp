@@ -6,7 +6,7 @@
 
 namespace ariel{
        
-    Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2), draw(0){
+    Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2), draw(0), rounds(0){
         this->deck = createDeck();
         shuffleDeck(this->deck);
         divideDeck(this->deck/*, this->player1, this->player2*/);
@@ -42,35 +42,40 @@ namespace ariel{
             return;
         }
         else{
+            rounds++;
+            // std::cout << "Round : " << to_string(26-player1.stacksize()) << endl;
             Card card1 = this->player1.playCard();
             Card card2 = this->player2.playCard();
             if(card1.getValue() == 2 && card2.getValue() == 14){ // 2 wins against ace
+        
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
+                this->player1.setWins(1);
                 fillInfo(1,card1,card2,1);
                 
             }
             else if(card1.getValue() == 14 && card2.getValue() == 2){ // 2 wins against ace
                 this->player2.AddWonCard(card1);
                 this->player2.AddWonCard(card2);
+                this->player2.setWins(1);
                 fillInfo(2,card1,card2,1);
 
             }
             else if(card1 > card2){ 
                 this->player1.AddWonCard(card2);
                 this->player1.AddWonCard(card1);
+                this->player1.setWins(1);
                 fillInfo(1,card1,card2,1);
 
             }
             else if(card1 < card2){
                 this->player2.AddWonCard(card1);
                 this->player2.AddWonCard(card2);
+                this->player2.setWins(1);
                 fillInfo(2,card1,card2,1);
 
             }
             else{ // draw
-                this->player1.setDrawAmount(1);
-                this->player2.setDrawAmount(1);
                 draw++;
                 this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". Draw. ";
                 this->logs += this->lastRound;
@@ -127,8 +132,6 @@ namespace ariel{
                   }
                   else{ // card1 = card2
                     draw++;
-                    this->player1.setDrawAmount(1);
-                    this->player2.setDrawAmount(1);
                     jackpot.push_back(card1Closed);
                     jackpot.push_back(card2Closed);
                     jackpot.push_back(card1Open);
@@ -183,9 +186,10 @@ namespace ariel{
         
         stats = this->player1.getName() + "{\n"
                 + "\tscore : " + to_string(player1.getScore()) + "\n"
+                + "\twins : " + to_string(player1.getWins()) + "\n"
                 + "\tamount of draws : " + to_string(this->draw) + "\n"
-                + "\tdraw rate : " + to_string((double)this->draw/(26-this->player1.stacksize())*100.0) + "%\n" 
-                + "\twinRates : " + to_string(player1.winRate(26-this->player1.stacksize())) + "%\n"
+                + "\tdraw rate : " + to_string((double)this->draw/rounds*100.0) + "%\n" 
+                + "\twinRates : " + to_string(player1.getWins()*100.0/rounds) + "%\n"
                 + "\tWonCards : " + to_string(this->player1.getWonCards().size()) + "\n"
                 + "\tCards [ \n" 
                 + cards1 + "\n"
@@ -193,9 +197,10 @@ namespace ariel{
                 + "}\n\n"
                 + this->player2.getName() + "{\n"
                 + "\tscore : " + to_string(player2.getScore()) + "\n"
+                + "\twins : " + to_string(player2.getWins()) + "\n"
                 + "\tamount of draws : " + to_string(this->draw) + "\n"
-                + "\tdraw rate : " + to_string((double)this->draw/(26-this->player2.stacksize())*100.0) + "%\n"
-                + "\twinRates : " + to_string(player2.winRate(26-this->player2.stacksize())) + "%\n"
+                + "\tdraw rate : " + to_string((double)this->draw/rounds*100.0) + "%\n"
+                + "\twinRates : " + to_string(player2.getWins()*100.0/rounds) + "%\n"
                 + "\tWonCards : " + to_string(this->player2.getWonCards().size()) + "\n"
                 + "\tCards [ \n" 
                 + cards2 + "\n"
