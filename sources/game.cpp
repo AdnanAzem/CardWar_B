@@ -32,7 +32,6 @@ namespace ariel{
         player.AddWonCard(card1);
         player.AddWonCard(card2);
         player.setWins(points);
-
     }
 
     void Game::playTurn(){
@@ -92,7 +91,6 @@ namespace ariel{
                         done = true;
                         break;
                     }
-
                   }
                   card1Closed = this->player1.playCard();
                   card1Open = this->player1.playCard();
@@ -130,7 +128,6 @@ namespace ariel{
         jackpot.push_back(card2);
         jackpot.push_back(card3);
         jackpot.push_back(card4);
-
     }
 
     void Game::printLastTurn(){
@@ -179,20 +176,19 @@ namespace ariel{
     string Game::fillStats(Player &player, string cards){
         string res;
         res = player.getName() + "{\n"
-                + "\tamout of rounds : " + to_string(rounds) + "\n"
-                + "\tscore : " + to_string(player.getScore()) + "\n"
-                + "\twins : " + to_string(player.getWins()) + "\n"
-                + "\tamount of draws : " + to_string(this->draw) + "\n"
-                + "\tdraw rate : " + to_string((double)this->draw/rounds*100.0) + "%\n" 
-                + "\twinRates : " + to_string(player.getWins()*100.0/rounds) + "%\n"
-                + "\tWonCards : " + to_string(player.getWonCards().size()) + "\n"
-                + "\tCards [ \n" 
-                + cards + "\n"
-                + "\t]\n"
-                + "}\n\n";
+            + "\tamout of rounds : " + to_string(rounds) + "\n"
+            + "\tscore : " + to_string(player.getScore()) + "\n"
+            + "\twins : " + to_string(player.getWins()) + "\n"
+            + "\tamount of draws : " + to_string(this->draw) + "\n"
+            + "\tdraw rate : " + to_string((double)this->draw/rounds*100.0) + "%\n" 
+            + "\twinRates : " + to_string(player.getWins()*100.0/rounds) + "%\n"
+            + "\tWonCards : " + to_string(player.getWonCards().size()) + "\n"
+            + "\tCards [ \n" 
+            + cards + "\n"
+            + "\t]\n"
+            + "}\n\n";
         return res;
     }
-
 
     vector<Card> Game::createDeck(){
         vector<Card> deck;
