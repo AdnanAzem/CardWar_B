@@ -33,6 +33,9 @@ namespace ariel{
         void divideDeck(vector<Card>& deck/*, Player &player1, Player &player2*/);  // Define a function to divide the deck of cards between two players
 
         void fillInfo(int playerNum, Card &playedCard1, Card &playedCard2, int points); // fill information when player win a round
+        string fillStats(Player &player, string cards); // fill the stats of the player
+        void addToJackpot(vector<Card> &jackpot, Card &card1, Card &card2, Card &card3, Card &card4); // add cards to the jackpot
+        void addAllCards(Player &player, Card &card1, Card &card2, int points); // add the won cards together
 
     };
 }
