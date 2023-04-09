@@ -143,11 +143,11 @@ namespace ariel{
     void Game::printWiner(){
         if (player1.cardesTaken() > player2.cardesTaken()){
             winner = player1.getName();
-            std::cout << winner << endl;
+            std::cout << "The winner is : " << winner << endl;
         }
         else if (player1.cardesTaken() < player2.cardesTaken()){
             winner = player2.getName();
-            std::cout << winner << endl;
+            std::cout << "The winner is : " << winner << endl;
         }
         else{
             std::cout << "Draw Game!" << endl;
