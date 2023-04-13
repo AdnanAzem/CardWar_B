@@ -104,7 +104,7 @@ namespace ariel{
                   card1Open = this->player1.playCard();
                   card2Closed = this->player2.playCard();
                   card2Open = this->player2.playCard();
-                  if(card1Open.getValue() == 2 && card1Open.getValue() == 14){ // 2 wins against ace
+                  if(card1Open.getValue() == 2 && card2Open.getValue() == 14){ // 2 wins against ace
                     addToJackpot(jackpot, card1Open, card2Open, card1Closed, card2Closed);
                     for(Card card : jackpot){
                       this->player1.AddWonCard(card);
@@ -113,7 +113,7 @@ namespace ariel{
                     fillInfo(1,card1Open,card2Open,3);
                     break;
                   }
-                  else if(card1Open.getValue() == 14 && card1Open.getValue() == 2){ // 2 wins against ace
+                  else if(card1Open.getValue() == 14 && card2Open.getValue() == 2){ // 2 wins against ace
                     addToJackpot(jackpot, card2Open, card1Open, card2Closed, card1Closed);
                     for(Card card : jackpot){
                       this->player2.AddWonCard(card);
