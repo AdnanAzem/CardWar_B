@@ -1,3 +1,8 @@
+/*
+    I used this link to get more information about: random_device, mt19937, shuffle 
+    https://stackoverflow.com/questions/38367976/do-stdrandom-device-and-stdmt19937-follow-an-uniform-distribution
+*/
+
 
 #include "game.hpp"
 #include <algorithm>
@@ -202,9 +207,14 @@ namespace ariel{
     }
 
     void Game::shuffleDeck(vector<Card> &deck){
-        random_device rd;
-        mt19937 g(rd());
-        shuffle(deck.begin(), deck.end(), g);
+        random_device rd;   // is a uniformly-distributed random number generator that may access a hardware device in your system, or something like /dev/random on Linux. 
+                            // It is usually just used to seed a pseudo-random generator, since the underlying device wil usually run out of entropy quickly.
+
+        mt19937 g(rd());    // is a fast pseudo-random number generator using the Mersenne Twister engine which, according to the original authors' paper title, is also uniform. This generates fully random 32-bit or 64-bit unsigned integers.
+                            // Since std::random_device is only used to seed this generator, it does not have to be uniform itself 
+
+        shuffle(deck.begin(), deck.end(), g);   // Reorders the elements in the given range [first, last) such that each possible permutation of those elements has equal probability of appearance.
+                                                // The source of randomness is the object g.
     }
 
     void Game::divideDeck(vector<Card> &deck/*, Player &player1, Player &player2*/){
