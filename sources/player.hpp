@@ -40,6 +40,6 @@ namespace ariel{
         void AddWonCard(Card &card); // add won cards to (wonCards)
         double winRate(int round);
 
-        bool operator==(const Player& other) const { return name == other.name; } // Comparison operator overloads
+        // bool operator==(const Player& other) const { return name == other.name; } // Comparison operator overloads
     };
 }

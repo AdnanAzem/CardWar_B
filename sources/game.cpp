@@ -39,7 +39,7 @@ namespace ariel{
             throw ("Game is over!!!");
             return;
         }
-        if(player1 == player2){ throw ("Same Player!!!");}
+        if(&player1 == &player2){ throw ("Same Player!!!");}
         if(this->player1.stacksize() == 0 || this->player2.stacksize() == 0){
             gameover = true;
             return;
