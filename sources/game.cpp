@@ -3,14 +3,14 @@
     https://stackoverflow.com/questions/38367976/do-stdrandom-device-and-stdmt19937-follow-an-uniform-distribution
 */
 
-
 #include "game.hpp"
 #include <algorithm>
 #include <random>
 #include <chrono>
 
 namespace ariel{
-       
+
+    // ==================== constructor ====================
     Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2), draw(0), rounds(0){
         this->deck = createDeck();
         shuffleDeck(this->deck);
@@ -18,6 +18,7 @@ namespace ariel{
         gameover = false;
     }
 
+    // ==================== fill info ====================
     void Game::fillInfo(int playerNum, Card &playedCard1, Card &playedCard2, int points){
         if(playerNum == 1){ // fill info for player 1
             this->player1.setScore(points);
@@ -33,12 +34,14 @@ namespace ariel{
         }
     }
 
+    // ==================== add all cards ====================
     void Game::addAllCards(Player &player, Card &card1, Card &card2, int points){
         player.AddWonCard(card1);
         player.AddWonCard(card2);
         player.setWins(points);
     }
 
+    // ==================== play turn ====================
     void Game::playTurn(){
         if(gameover){
             throw ("Game is over!!!");
@@ -80,13 +83,13 @@ namespace ariel{
                 while(!done){
                   Card card1Closed, card1Open, card2Closed, card2Open;
                   if(this->player1.stacksize() < 2 || this->player2.stacksize() < 2){ // players have less than 2 cards
-                    if(this->player1.stacksize() == 0 || this->player2.stacksize() == 0){
+                    if(this->player1.stacksize() == 0 || this->player2.stacksize() == 0){ // no cards in the stacksize
                         player1.AddWonCard(card1);
                         player2.AddWonCard(card2);
                         done = true;
                         break;
                     }
-                    else{
+                    else{ // one card left in the stacksize
                         player1.AddWonCard(card1);
                         card1 = this->player1.playCard();
                         player1.AddWonCard(card1);
@@ -101,23 +104,43 @@ namespace ariel{
                   card1Open = this->player1.playCard();
                   card2Closed = this->player2.playCard();
                   card2Open = this->player2.playCard();
-                  if(card1Open > card2Open){
+                  if(card1Open.getValue() == 2 && card1Open.getValue() == 14){ // 2 wins against ace
                     addToJackpot(jackpot, card1Open, card2Open, card1Closed, card2Closed);
                     for(Card card : jackpot){
                       this->player1.AddWonCard(card);
                     }
                     done = true;
                     fillInfo(1,card1Open,card2Open,3);
+                    break;
                   }
-                  else if(card1Open < card2Open){
+                  else if(card1Open.getValue() == 14 && card1Open.getValue() == 2){ // 2 wins against ace
+                    addToJackpot(jackpot, card2Open, card1Open, card2Closed, card1Closed);
+                    for(Card card : jackpot){
+                      this->player2.AddWonCard(card);
+                    }
+                    done = true;
+                    fillInfo(2,card1Open,card2Open,3);
+                    break;
+                  }
+                  else if(card1Open > card2Open){ // card 1 open bigger than card 2 open
+                    addToJackpot(jackpot, card1Open, card2Open, card1Closed, card2Closed);
+                    for(Card card : jackpot){
+                      this->player1.AddWonCard(card);
+                    }
+                    done = true;
+                    fillInfo(1,card1Open,card2Open,3);
+                    break;
+                  }
+                  else if(card1Open < card2Open){ // card 1 open smaller than card 2 open
                     addToJackpot(jackpot, card2Open, card1Open, card2Closed, card1Closed);
                     for(Card card : jackpot){
                       this->player2.AddWonCard(card);
                       }
                     done = true;
                     fillInfo(2,card1Open,card2Open,3);
+                    break;
                   }
-                  else{ // card1 = card2
+                  else{ // card 1 open equal to card 2 open
                     draw++;
                     addToJackpot(jackpot, card1Closed, card2Closed, card1Open, card2Open);
                     this->lastRound = player1.getName() + " played " + card1.to_string() + " " +this->player2.getName() + " played " + card2.to_string() + ". draw. ";
@@ -128,6 +151,7 @@ namespace ariel{
         }
     }
 
+    // ==================== add to jackpot ====================
     void Game::addToJackpot(vector<Card> &jackpot, Card &card1, Card &card2, Card &card3, Card &card4){
         jackpot.push_back(card1);
         jackpot.push_back(card2);
@@ -135,16 +159,19 @@ namespace ariel{
         jackpot.push_back(card4);
     }
 
+    // ==================== print last turn ====================
     void Game::printLastTurn(){
         std::cout << this->lastRound << endl;
     }
 
+    // ==================== play all ====================
     void Game::playAll(){
         while(!gameover || player1.stacksize() > 0){
             playTurn();
         }
     }
 
+    // ==================== print winner ====================
     void Game::printWiner(){
         if (player1.cardesTaken() > player2.cardesTaken()){
             winner = player1.getName();
@@ -159,10 +186,12 @@ namespace ariel{
         }
     }
 
+    // ==================== print log ====================
     void Game::printLog(){
         std::cout << this->logs << endl;
     }
 
+    // ==================== print stats ====================
     void Game::printStats(){
         string cards1;
         for(Card card : this->player1.getWonCards()){
@@ -178,6 +207,7 @@ namespace ariel{
         std::cout << this->stats << endl;
     }
 
+    // ==================== fill stats ====================
     string Game::fillStats(Player &player, string cards){
         string res;
         res = player.getName() + "{\n"
@@ -195,6 +225,7 @@ namespace ariel{
         return res;
     }
 
+    // ==================== create deck ====================
     vector<Card> Game::createDeck(){
         vector<Card> deck;
         // create a standard deck of 52 cards
@@ -206,6 +237,7 @@ namespace ariel{
         return deck;
     }
 
+    // ==================== shuffle deck ====================
     void Game::shuffleDeck(vector<Card> &deck){
         random_device rd;   // is a uniformly-distributed random number generator that may access a hardware device in your system, or something like /dev/random on Linux. 
                             // It is usually just used to seed a pseudo-random generator, since the underlying device wil usually run out of entropy quickly.
@@ -217,6 +249,7 @@ namespace ariel{
                                                 // The source of randomness is the object g.
     }
 
+    // ==================== divide deck ====================
     void Game::divideDeck(vector<Card> &deck/*, Player &player1, Player &player2*/){
         int counter = 0;
         for (Card card : deck){
